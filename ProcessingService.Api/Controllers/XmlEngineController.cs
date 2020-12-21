@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ProcessingService.Api.Application.Commands;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace ProcessingService.Api.Controllers
@@ -26,11 +25,19 @@ namespace ProcessingService.Api.Controllers
 
         [Route("extract")]
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<ExtractDataResult>> ExtractsDataAsync([FromBody] ExtractDataCommand extractDataCommand)
         {
             _logger.LogInformation("----- Extract data command: {RawData}", extractDataCommand.RawData);
 
-            return await _mediator.Send(extractDataCommand);
+            try
+            {
+                return await _mediator.Send(extractDataCommand);
+            }
+            catch (InvalidInputException ex)
+            {
+                return BadRequest(ex.Message);                
+            }            
         }
     }
 }

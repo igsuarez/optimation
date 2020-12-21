@@ -53,6 +53,10 @@ namespace ProcessingService.Api.Application.Commands
                 return Task.FromResult(ExtractDataResult.Create(xmlData, totalWithoutGST, total - totalWithoutGST));
 
             }
+            catch (InvalidInputException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 throw new InvalidInputException($"Error during processing data. Input: {message.RawData}", ex); ;
