@@ -25,6 +25,7 @@ namespace ProcessingService.Api.Controllers
 
         [Route("extract")]
         [HttpPost]
+        [ProducesResponseType(typeof(ExtractDataResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<ExtractDataResult>> ExtractsDataAsync([FromBody] ExtractDataCommand extractDataCommand)
         {
@@ -32,7 +33,8 @@ namespace ProcessingService.Api.Controllers
 
             try
             {
-                return await _mediator.Send(extractDataCommand);
+                var extractResult = await _mediator.Send(extractDataCommand);
+                return Ok(extractResult);
             }
             catch (InvalidInputException ex)
             {
