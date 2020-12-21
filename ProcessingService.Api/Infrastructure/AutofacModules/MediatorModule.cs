@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using MediatR;
+using ProcessingService.Api.Application.Behaviors;
 using ProcessingService.Api.Application.Commands;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,14 @@ namespace ProcessingService.Api.Infrastructure.AutofacModules
 
             builder.RegisterAssemblyTypes(typeof(ExtractDataCommand).GetTypeInfo().Assembly)
                 .AsClosedTypesOf(typeof(IRequestHandler<,>));
+
+            builder.Register<ServiceFactory>(context =>
+            {
+                var componentContext = context.Resolve<IComponentContext>();
+                return t => { object o; return componentContext.TryResolve(t, out o) ? o : null; };
+            });
+
+            builder.RegisterGeneric(typeof(LoggingBehavior<,>)).As(typeof(IPipelineBehavior<,>));
 
         }
     }

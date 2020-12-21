@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using ProcessingService.Api.Application.Commands;
+using ProcessingService.Api.Infrastructure.Services;
 
 namespace ProcessingService.Api.Infrastructure.AutofacModules
 {
@@ -13,25 +14,13 @@ namespace ProcessingService.Api.Infrastructure.AutofacModules
 
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<XmlService>()
+                .As<IXmlService>()
+                .InstancePerLifetimeScope();
 
-            //builder.Register(c => new OrderQueries(QueriesConnectionString))
-            //    .As<IOrderQueries>()
-            //    .InstancePerLifetimeScope();
-
-            //builder.RegisterType<BuyerRepository>()
-            //    .As<IBuyerRepository>()
-            //    .InstancePerLifetimeScope();
-
-            //builder.RegisterType<OrderRepository>()
-            //    .As<IOrderRepository>()
-            //    .InstancePerLifetimeScope();
-
-            //builder.RegisterType<RequestManager>()
-            //   .As<IRequestManager>()
-            //   .InstancePerLifetimeScope();
-
-            //builder.RegisterAssemblyTypes(typeof(ExtractDataCommandHandler).GetTypeInfo().Assembly)
-            //    .AsClosedTypesOf(typeof(IIntegrationEventHandler<>));
+            builder.RegisterType<TaxesService>()
+                .As<ITaxesService>()
+                .InstancePerLifetimeScope();
 
         }
     }
